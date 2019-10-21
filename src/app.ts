@@ -2,6 +2,8 @@ import express from 'express';
 import routes from './routes';
 
 class App {
+  public server: express.Application;
+
   constructor() {
     this.server = express();
 
@@ -9,11 +11,11 @@ class App {
     this.routes();
   }
 
-  middlewares() {
+  private middlewares(): void {
     this.server.use(express.json());
   }
 
-  routes() {
+  private routes(): void {
     this.server.use(routes);
   }
 }
