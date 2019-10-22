@@ -1,4 +1,6 @@
-module.exports = {
+import { Options } from 'sequelize';
+
+const databaseConfig: Options = {
   dialect: 'postgres',
   host: 'localhost',
   username: 'postgres',
@@ -7,6 +9,7 @@ module.exports = {
   define: {
     timestamps: true,
     underscored: true,
-    underscoredAll: true,
   },
 };
+
+export default databaseConfig;
