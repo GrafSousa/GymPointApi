@@ -25,6 +25,7 @@ module.exports = {
     "no-param-reassign": "off",
     "camelcase": "off",
     "no-unused-vars": ["error", { "argsIgnorePattern": "next" }],
+    "@typescript-eslint/camelcase": ["error", { "properties": "never" } ],
   },
   settings: {
     "import/resolver": {
