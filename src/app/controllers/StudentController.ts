@@ -6,9 +6,13 @@ import Student from '../models/Student';
 class StudentController {
   public async store(req: Request, res: Response): Promise<Response> {
     const schema = Yup.object().shape({
+      name: Yup.string().required(),
       email: Yup.string()
         .email()
         .required(),
+      age: Yup.number().required(),
+      weight: Yup.number().required(),
+      height: Yup.number().required(),
     });
 
     if (!(await schema.isValid(req.body))) {
