@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "nodemon src/server.ts",
-    "dev:debug": "nodemon --inspect src/server.ts"
+    "dev:debug": "nodemon --inspect src/server.ts",
+    "lint": "eslint . --ext .ts"
   },
   "dependencies": {
     "@types/bcryptjs": "^2.4.2",
