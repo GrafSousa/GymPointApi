@@ -15,7 +15,7 @@ class Student extends BaseModel {
 
   public height: number;
 
-  static initModel(sequelize: sq.Sequelize) {
+  static initModel(sequelize: sq.Sequelize): typeof Student {
     Student.init(
       {
         name: sq.STRING,
@@ -28,7 +28,7 @@ class Student extends BaseModel {
         sequelize,
       }
     );
-    return this;
+    return Student;
   }
 }
 

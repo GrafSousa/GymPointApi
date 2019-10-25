@@ -12,7 +12,7 @@ class User extends BaseModel {
 
   public password_hash: string;
 
-  static initModel(sequelize: sq.Sequelize) {
+  static initModel(sequelize: sq.Sequelize): typeof User {
     User.init(
       {
         name: sq.STRING,
@@ -29,7 +29,7 @@ class User extends BaseModel {
         user.password_hash = await bcrypt.hash(user.password, 8);
       }
     });
-    return this;
+    return User;
   }
 
   public checkPassword(password: string): Promise<boolean> {

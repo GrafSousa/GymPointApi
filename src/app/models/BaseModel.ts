@@ -1,5 +1,5 @@
 import sq, { Model } from 'sequelize';
 
 export default abstract class BaseModel extends Model {
-  static initModel(_: sq.Sequelize): void {}
+  public static initModel(sq: sq.Sequelize): void;
 }
