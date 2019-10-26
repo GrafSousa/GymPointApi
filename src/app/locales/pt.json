@@ -1,0 +1,8 @@
+{
+  "password-notMatch": "Senha incorreta",
+  "validation-fail": "Falha na validação",
+  "user-notFound": "Usuário não encontrado",
+  "student.already.exists": "Aluno já cadastrado",
+  "token.notProvided": "Token não fornecido",
+  "token.invalid": "Token inválido"
+}

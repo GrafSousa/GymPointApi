@@ -1,0 +1,8 @@
+{
+  "password.notMatch": "Password does not match",
+  "validation.fail": "Validation fails",
+  "user.notFound": "User not found",
+  "student.already.exists": "Student already exists",
+  "token.notProvided": "Token not provided",
+  "token.invalid": "Token invalid"
+}

@@ -10,11 +10,13 @@
   },
   "dependencies": {
     "@types/bcryptjs": "^2.4.2",
+    "@types/i18n": "^0.8.6",
     "@types/jsonwebtoken": "^8.3.5",
     "@types/sequelize": "^4.28.6",
     "@types/yup": "^0.26.24",
     "bcryptjs": "^2.4.3",
     "express": "^4.17.1",
+    "i18n": "^0.8.4",
     "jsonwebtoken": "^8.5.1",
     "pg": "^7.12.1",
     "pg-hstore": "^2.3.3",

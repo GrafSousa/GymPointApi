@@ -1,4 +1,6 @@
 import express from 'express';
+
+import i18n from './i18n';
 import routes from './routes';
 
 import './database';
@@ -11,6 +13,7 @@ class App {
 
     this.middlewares();
     this.routes();
+    this.i18n();
   }
 
   private middlewares(): void {
@@ -19,6 +22,10 @@ class App {
 
   private routes(): void {
     this.server.use(routes);
+  }
+
+  private i18n(): void {
+    this.server.use(i18n.init);
   }
 }
 

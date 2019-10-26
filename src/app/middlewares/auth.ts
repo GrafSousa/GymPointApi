@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import { promisify } from 'util';
 
 import authConfig from '../../config/auth';
+import i18n from '../../i18n';
 
 async function authMiddleware(
   req: Request,
@@ -12,7 +13,7 @@ async function authMiddleware(
   const authHeader = req.headers.authorization;
 
   if (!authHeader) {
-    return res.status(401).json({ error: 'Token not provide ' });
+    return res.status(401).json({ error: `${i18n.__('token.notProvided')}` });
   }
 
   const [, token] = authHeader.split(' ');
@@ -22,7 +23,7 @@ async function authMiddleware(
 
     return next();
   } catch (err) {
-    return res.status(401).json({ error: 'Token invalid' });
+    return res.status(401).json({ error: `${i18n.__('token.invalid')}` });
   }
 }
 

@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import * as Yup from 'yup';
 
 import Student from '../models/Student';
+import i18n from '../../i18n';
 
 class StudentController {
   public async store(req: Request, res: Response): Promise<Response> {
@@ -16,7 +17,7 @@ class StudentController {
     });
 
     if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: 'Validation fails' });
+      return res.status(400).json({ error: `${i18n.__('validation.fail')}` });
     }
 
     const studentExists = await Student.findOne({
@@ -24,7 +25,9 @@ class StudentController {
     });
 
     if (studentExists) {
-      return res.status(409).json({ error: 'Student already exists' });
+      return res
+        .status(409)
+        .json({ error: `${i18n.__('student.already.exists')}` });
     }
 
     const { id, name, email, age, weight, height } = await Student.create(
@@ -51,7 +54,7 @@ class StudentController {
     });
 
     if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: 'Validation fails' });
+      return res.status(400).json({ error: `${i18n.__('validation.fail')}` });
     }
 
     const { id } = req.params;
@@ -63,7 +66,9 @@ class StudentController {
       const studentExists = await Student.findOne({ where: { email } });
 
       if (studentExists) {
-        return res.status(409).json({ error: 'Student already exists ' });
+        return res
+          .status(409)
+          .json({ error: `${i18n.__('student.already.exists')}` });
       }
     }
 
