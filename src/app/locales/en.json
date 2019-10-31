@@ -4,5 +4,8 @@
   "user.notFound": "User not found",
   "student.already.exists": "Student already exists",
   "token.notProvided": "Token not provided",
-  "token.invalid": "Token invalid"
+  "token.invalid": "Token invalid",
+  "plan.already.exists": "Plan already exists",
+  "plan.notFound": "Plan not found",
+  "plan.deleted": "Plan deleted successfully"
 }

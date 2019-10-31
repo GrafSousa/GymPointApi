@@ -4,5 +4,8 @@
   "user-notFound": "Usuário não encontrado",
   "student.already.exists": "Aluno já cadastrado",
   "token.notProvided": "Token não fornecido",
-  "token.invalid": "Token inválido"
+  "token.invalid": "Token inválido",
+  "plan.already.exists": "Plano já cadastrado",
+  "plan.notFound": "Plano não encontrado",
+  "plan.deleted": "Plano deletado com sucesso"
 }
