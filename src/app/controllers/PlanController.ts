@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import * as Yup from 'yup';
 
-import Plan from '../models/Plan';
-import i18n from '../../i18n';
+import { Plan } from '../models/Plan';
+import { i18n } from '../../i18n';
 
 class PlanController {
   public async index(req: Request, res: Response): Promise<Response> {

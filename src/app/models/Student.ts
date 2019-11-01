@@ -1,6 +1,6 @@
 import sq from 'sequelize';
 
-import BaseModel from './BaseModel';
+import { BaseModel } from './BaseModel';
 
 class Student extends BaseModel {
   public id: number;
@@ -32,4 +32,4 @@ class Student extends BaseModel {
   }
 }
 
-export default Student;
+export { Student };

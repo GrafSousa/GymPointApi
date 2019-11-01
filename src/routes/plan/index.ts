@@ -14,4 +14,4 @@ planRoutes
   .delete(PlanController.delete)
   .put(PlanController.update);
 
-export default planRoutes;
+export { planRoutes };

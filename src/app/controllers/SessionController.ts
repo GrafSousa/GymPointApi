@@ -3,8 +3,8 @@ import jwt from 'jsonwebtoken';
 import * as Yup from 'yup';
 
 import authConfig from '../../config/auth';
-import User from '../models/User';
-import i18n from '../../i18n';
+import { User } from '../models/User';
+import { i18n } from '../../i18n';
 
 class SessionControler {
   public async store(req: Request, res: Response): Promise<Response> {

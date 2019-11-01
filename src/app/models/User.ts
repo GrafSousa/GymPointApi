@@ -1,7 +1,7 @@
 import sq from 'sequelize';
 import bcrypt from 'bcryptjs';
 
-import BaseModel from './BaseModel';
+import { BaseModel } from './BaseModel';
 
 class User extends BaseModel {
   public id: number;
@@ -37,4 +37,4 @@ class User extends BaseModel {
   }
 }
 
-export default User;
+export { User };

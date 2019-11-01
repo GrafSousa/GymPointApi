@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import { promisify } from 'util';
 
 import authConfig from '../../config/auth';
-import i18n from '../../i18n';
+import { i18n } from '../../i18n';
 
 async function authMiddleware(
   req: Request,
@@ -27,4 +27,4 @@ async function authMiddleware(
   }
 }
 
-export default authMiddleware;
+export { authMiddleware };

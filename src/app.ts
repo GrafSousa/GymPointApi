@@ -1,7 +1,7 @@
 import express from 'express';
 
-import i18n from './i18n';
-import routes from './routes/index';
+import { i18n } from './i18n';
+import { routes } from './routes/index';
 
 import './database';
 

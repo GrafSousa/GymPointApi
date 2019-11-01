@@ -5,4 +5,4 @@ i18n.configure({
   directory: `${__dirname}/app/locales`,
 });
 
-export default i18n;
+export { i18n };

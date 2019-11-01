@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import * as Yup from 'yup';
 
-import Student from '../models/Student';
-import i18n from '../../i18n';
+import { Student } from '../models/Student';
+import { i18n } from '../../i18n';
 
 class StudentController {
   public async store(req: Request, res: Response): Promise<Response> {

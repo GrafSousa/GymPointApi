@@ -7,4 +7,4 @@ const studentRoutes = Router();
 studentRoutes.route('').post(StudentController.store);
 studentRoutes.route('/:id').put(StudentController.update);
 
-export default studentRoutes;
+export { studentRoutes };
