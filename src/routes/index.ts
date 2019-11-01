@@ -8,12 +8,13 @@ import planRoutes from './plan/index';
 import studentRoutes from './students/index';
 
 const routes = Router();
+const url = '/api';
 
 routes.post('/sessions', SessionController.store);
 
 routes.use(authMiddleware);
 
-routes.use('/students', studentRoutes);
-routes.use('/plan', planRoutes);
+routes.use(`${url}/students`, studentRoutes);
+routes.use(`${url}/plan`, planRoutes);
 
 export default routes;
