@@ -27,6 +27,7 @@ module.exports = {
     "no-unused-vars": ["error", { "argsIgnorePattern": "next" }],
     "@typescript-eslint/camelcase": ["error", { "properties": "never" } ],
     "no-underscore-dangle": 0,
+    "import/prefer-default-export": "off"
   },
   settings: {
     "import/resolver": {
