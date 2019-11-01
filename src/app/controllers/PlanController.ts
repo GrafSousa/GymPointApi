@@ -67,6 +67,16 @@ class PlanController {
       return res.status(404).json({ error: `${i18n.__('plan.notFound')}` });
     }
 
+    const existPlan = await Plan.findOne({
+      where: { title: req.body.title },
+    });
+
+    if (existPlan) {
+      return res
+        .status(409)
+        .json({ error: `${i18n.__('plan.already.exists')}` });
+    }
+
     const { id, title, duration, price } = await plan.update(req.body);
 
     return res.json({
