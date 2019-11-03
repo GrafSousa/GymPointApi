@@ -1,14 +1,20 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import * as Yup from 'yup';
 import { Request, Response } from 'express';
-import { parseISO, isBefore, addMonths, startOfDay } from 'date-fns';
-
-import areIntervalsOverlapping from 'date-fns/areIntervalsOverlapping';
+import {
+  parseISO,
+  isBefore,
+  addMonths,
+  startOfDay,
+  areIntervalsOverlapping,
+} from 'date-fns';
 
 import { Plan } from '../models/Plan';
 import { Student } from '../models/Student';
-import { i18n } from '../../i18n';
 import { Enrollment } from '../models/Enrollment';
+import Mail from '../../lib/Mail';
+
+import { i18n } from '../../i18n';
 
 class EnrollmentController {
   async index(req: Request, res: Response): Promise<Response> {
@@ -95,7 +101,7 @@ class EnrollmentController {
     ) {
       return res
         .status(409)
-        .json({ error: `${i18n.__('enrollment.enrollment.overlapping')}` });
+        .json({ error: `${i18n.__('enrollment.overlapping')}` });
     }
 
     const enrollment = await Enrollment.create({
@@ -104,6 +110,12 @@ class EnrollmentController {
       start_date,
       end_date,
       price,
+    });
+
+    await Mail.sendMail({
+      to: `${student.name} <${student.email}>`,
+      subject: 'Matrícula GymPoint',
+      text: 'Você tem uma nova matrícula',
     });
 
     return res.json(enrollment);
