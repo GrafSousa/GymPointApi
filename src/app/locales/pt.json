@@ -3,9 +3,15 @@
   "validation-fail": "Falha na validação",
   "user-notFound": "Usuário não encontrado",
   "student.already.exists": "Aluno já cadastrado",
+  "student.notFound": "Aluno não encontrado",
   "token.notProvided": "Token não fornecido",
   "token.invalid": "Token inválido",
   "plan.already.exists": "Plano já cadastrado",
   "plan.notFound": "Plano não encontrado",
-  "plan.deleted": "Plano deletado com sucesso"
+  "plan.deleted": "Plano deletado com sucesso",
+  "enrollment.notFound": "Matrícula não encontrada",
+  "enrollment.invalidStudent": "Estudante inválido",
+  "enrollment.invalidPlan": "Plano inválido",
+  "enrollment.overlapping": "Aluno já possui matrícula nesta data",
+  "enrollment.pastDates": "Datas passadas não são permitidas"
 }

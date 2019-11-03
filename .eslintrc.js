@@ -24,8 +24,8 @@ module.exports = {
     "class-methods-use-this": "off",
     "no-param-reassign": "off",
     "camelcase": "off",
+    "@typescript-eslint/camelcase": ["error", { "properties": "never", "ignoreDestructuring": true }],
     "no-unused-vars": ["error", { "argsIgnorePattern": "next" }],
-    "@typescript-eslint/camelcase": ["error", { "properties": "never" } ],
     "no-underscore-dangle": 0,
     "import/prefer-default-export": "off"
   },

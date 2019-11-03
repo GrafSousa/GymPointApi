@@ -3,9 +3,15 @@
   "validation.fail": "Validation fails",
   "user.notFound": "User not found",
   "student.already.exists": "Student already exists",
+  "student.notFound": "Student not found",
   "token.notProvided": "Token not provided",
   "token.invalid": "Token invalid",
   "plan.already.exists": "Plan already exists",
   "plan.notFound": "Plan not found",
-  "plan.deleted": "Plan deleted successfully"
+  "plan.deleted": "Plan deleted successfully",
+  "enrollment.notFound": "Enrollment not found",
+  "enrollment.invalidStudent": "Invalid student",
+  "enrollment.invalidPlan": "Invalid plan",
+  "enrollment.overlapping": "Student already have enrollment in this date",
+  "enrollment.pastDates": "Past dates are not permitted"
 }

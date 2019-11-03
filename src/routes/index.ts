@@ -6,6 +6,7 @@ import { authMiddleware } from '../app/middlewares/auth';
 
 import { planRoutes } from './plan/index';
 import { studentRoutes } from './students/index';
+import { enrollmentRoutes } from './enrollment/index';
 
 const routes = Router();
 const url = '/api';
@@ -16,5 +17,6 @@ routes.use(authMiddleware);
 
 routes.use(`${url}/students`, studentRoutes);
 routes.use(`${url}/plan`, planRoutes);
+routes.use(`${url}/enrollment`, enrollmentRoutes);
 
 export { routes };

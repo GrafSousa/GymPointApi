@@ -15,6 +15,7 @@
     "@types/sequelize": "^4.28.6",
     "@types/yup": "^0.26.24",
     "bcryptjs": "^2.4.3",
+    "date-fns": "^2.0.0-beta.5",
     "express": "^4.17.1",
     "i18n": "^0.8.4",
     "jsonwebtoken": "^8.5.1",
