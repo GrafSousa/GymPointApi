@@ -1,5 +1,5 @@
 import { Sequelize } from 'sequelize';
-
+import mongoose from 'mongoose';
 import databaseConfig from '../config/database';
 
 import { Student } from '../app/models/Student';
@@ -14,6 +14,7 @@ class Database {
 
   constructor() {
     this.init();
+    this.mongo();
   }
 
   private init(): void {
@@ -22,6 +23,13 @@ class Database {
     models
       .map(model => model.initModel(this.connection))
       .map(model => model.associate && model.associate(this.connection.models));
+  }
+
+  mongo() {
+    this.connection = mongoose.connect('mongodb://localhost:27017/gympoint', {
+      useNewUrlParser: true,
+      useFindAndModify: true,
+    });
   }
 }
 
