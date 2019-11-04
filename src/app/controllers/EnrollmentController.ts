@@ -2,12 +2,14 @@
 import * as Yup from 'yup';
 import { Request, Response } from 'express';
 import {
+  format,
   parseISO,
   isBefore,
   addMonths,
   startOfDay,
   areIntervalsOverlapping,
 } from 'date-fns';
+import pt from 'date-fns/locale/pt';
 
 import { Plan } from '../models/Plan';
 import { Student } from '../models/Student';
@@ -115,7 +117,17 @@ class EnrollmentController {
     await Mail.sendMail({
       to: `${student.name} <${student.email}>`,
       subject: 'Matrícula GymPoint',
-      text: 'Você tem uma nova matrícula',
+      template: 'enroll',
+      context: {
+        studentName: student.name,
+        start_date: format(startDay, "dd 'de' MMMM 'de' yyyy", {
+          locale: pt,
+        }),
+        end_date: format(end_date, "dd 'de' MMMM 'de' yyyy", {
+          locale: pt,
+        }),
+        price,
+      },
     });
 
     return res.json(enrollment);
