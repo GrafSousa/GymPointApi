@@ -2,19 +2,19 @@
 import * as Yup from 'yup';
 import { Request, Response } from 'express';
 import {
-  format,
   parseISO,
   isBefore,
   addMonths,
   startOfDay,
   areIntervalsOverlapping,
 } from 'date-fns';
-import pt from 'date-fns/locale/pt';
 
 import { Plan } from '../models/Plan';
 import { Student } from '../models/Student';
 import { Enrollment } from '../models/Enrollment';
-import Mail from '../../lib/Mail';
+
+import EnrollMail from '../jobs/EnrollMail';
+import Queue from '../../lib/Queue';
 
 import { i18n } from '../../i18n';
 
@@ -114,20 +114,9 @@ class EnrollmentController {
       price,
     });
 
-    await Mail.sendMail({
-      to: `${student.name} <${student.email}>`,
-      subject: 'Matrícula GymPoint',
-      template: 'enroll',
-      context: {
-        studentName: student.name,
-        start_date: format(startDay, "dd 'de' MMMM 'de' yyyy", {
-          locale: pt,
-        }),
-        end_date: format(end_date, "dd 'de' MMMM 'de' yyyy", {
-          locale: pt,
-        }),
-        price,
-      },
+    await Queue.add(EnrollMail.key, {
+      student,
+      enrollment,
     });
 
     return res.json(enrollment);

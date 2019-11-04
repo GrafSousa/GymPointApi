@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "nodemon src/server.ts",
     "dev:debug": "nodemon --inspect src/server.ts",
+    "queue": "nodemon src/queue.ts",
     "lint": "eslint . --ext .ts"
   },
   "dependencies": {
@@ -17,6 +18,7 @@
     "@types/sequelize": "^4.28.6",
     "@types/yup": "^0.26.24",
     "bcryptjs": "^2.4.3",
+    "bee-queue": "^1.2.2",
     "date-fns": "^2.0.0-beta.5",
     "express": "^4.17.1",
     "express-handlebars": "^3.1.0",
