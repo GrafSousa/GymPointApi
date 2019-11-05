@@ -7,11 +7,13 @@ import { authMiddleware } from '../app/middlewares/auth';
 import { planRoutes } from './plan/index';
 import { studentRoutes } from './students/index';
 import { enrollmentRoutes } from './enrollment/index';
+import { checkinRoutes } from './checkin/index';
 
 const routes = Router();
 const url = '/api';
 
 routes.post('/sessions', SessionController.store);
+routes.use(`${url}/students`, checkinRoutes);
 
 routes.use(authMiddleware);
 
