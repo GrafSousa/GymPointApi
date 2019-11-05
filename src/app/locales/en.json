@@ -13,5 +13,6 @@
   "enrollment.invalidStudent": "Invalid student",
   "enrollment.invalidPlan": "Invalid plan",
   "enrollment.overlapping": "Student already have enrollment in this date",
-  "enrollment.pastDates": "Past dates are not permitted"
+  "enrollment.pastDates": "Past dates are not permitted",
+  "helpOrder.notFound": "Help order not found"
 }

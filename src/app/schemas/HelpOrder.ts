@@ -1,5 +1,12 @@
 import mongoose from 'mongoose';
 
+interface HelpOrderInterface extends mongoose.Document {
+  student: number;
+  question: string;
+  answer?: string;
+  answer_at?: Date;
+}
+
 const HelpOrderSchema = new mongoose.Schema(
   {
     student: {
@@ -25,4 +32,4 @@ const HelpOrderSchema = new mongoose.Schema(
   }
 );
 
-export default mongoose.model('HelpOrder', HelpOrderSchema);
+export default mongoose.model<HelpOrderInterface>('HelpOrder', HelpOrderSchema);

@@ -9,6 +9,7 @@ import { studentRoutes } from './students/index';
 import { studentHelpOrderRoutes } from './students/helpOrders';
 import { enrollmentRoutes } from './enrollment/index';
 import { checkinRoutes } from './checkin/index';
+import { helpOrderRoutes } from './helporders/index';
 
 const routes = Router();
 const url = '/api';
@@ -22,5 +23,6 @@ routes.use(authMiddleware);
 routes.use(`${url}/students`, studentRoutes);
 routes.use(`${url}/plan`, planRoutes);
 routes.use(`${url}/enrollment`, enrollmentRoutes);
+routes.use(`${url}/help-orders`, helpOrderRoutes);
 
 export { routes };
