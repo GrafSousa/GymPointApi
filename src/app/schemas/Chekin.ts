@@ -1,5 +1,9 @@
 import mongoose from 'mongoose';
 
+interface CheckinInterface extends mongoose.Document {
+  student: number;
+}
+
 const CheckinSchema = new mongoose.Schema(
   {
     student: {
@@ -12,4 +16,4 @@ const CheckinSchema = new mongoose.Schema(
   }
 );
 
-export default mongoose.model('Checkin', CheckinSchema);
+export default mongoose.model<CheckinInterface>('Checkin', CheckinSchema);
