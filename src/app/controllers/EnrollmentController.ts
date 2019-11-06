@@ -1,13 +1,8 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import * as Yup from 'yup';
 import { Request, Response } from 'express';
-import {
-  parseISO,
-  isBefore,
-  addMonths,
-  startOfDay,
-  areIntervalsOverlapping,
-} from 'date-fns';
+import { parseISO, isBefore, addMonths, startOfDay } from 'date-fns';
+import { Op } from 'sequelize';
 
 import { Plan } from '../models/Plan';
 import { Student } from '../models/Student';
@@ -57,8 +52,6 @@ class EnrollmentController {
 
     const { plan_id, student_id, start_date } = req.body;
 
-    const startDay = startOfDay(new Date(start_date));
-
     const plan = await Plan.findOne({
       where: { id: plan_id, excluded: false },
     });
@@ -73,6 +66,8 @@ class EnrollmentController {
       return res.status(404).json({ error: `${i18n.__('student.notFound')}` });
     }
 
+    const startDay = startOfDay(new Date(start_date));
+
     if (isBefore(startDay, startOfDay(new Date()))) {
       return res
         .status(400)
@@ -82,25 +77,21 @@ class EnrollmentController {
     const end_date = addMonths(parseISO(startDay.toISOString()), plan.duration);
     const price = plan.duration * plan.price;
 
-    const lastEnrollment = await Enrollment.findOne({
-      limit: 1,
+    const existsEnrollment = await Enrollment.count({
       where: {
         canceled_at: null,
-        student_id,
+        [Op.and]: {
+          start_date: {
+            [Op.lte]: end_date,
+          },
+          end_date: {
+            [Op.gte]: startDay,
+          },
+        },
       },
-      order: [['start_date', 'DESC']],
     });
 
-    if (
-      lastEnrollment &&
-      areIntervalsOverlapping(
-        {
-          start: startOfDay(lastEnrollment.start_date),
-          end: startOfDay(lastEnrollment.end_date),
-        },
-        { start: startDay, end: end_date }
-      )
-    ) {
+    if (existsEnrollment > 0) {
       return res
         .status(409)
         .json({ error: `${i18n.__('enrollment.overlapping')}` });
@@ -135,8 +126,6 @@ class EnrollmentController {
 
     const { plan_id, student_id, start_date } = req.body;
 
-    const startDay = startOfDay(new Date(start_date));
-
     const plan = await Plan.findOne({
       where: { id: plan_id, excluded: false },
     });
@@ -170,30 +159,27 @@ class EnrollmentController {
         .json({ error: `${i18n.__('enrollment.invalidStudent')}` });
     }
 
-    const lastEnrollment = await Enrollment.findOne({
-      limit: 1,
-      where: {
-        canceled_at: null,
-        student_id,
-      },
-      order: [['start_date', 'DESC']],
-    });
-
+    const startDay = startOfDay(new Date(start_date));
     const end_date = addMonths(parseISO(start_date), plan.duration);
 
-    if (
-      lastEnrollment &&
-      areIntervalsOverlapping(
-        {
-          start: startOfDay(lastEnrollment.start_date),
-          end: startOfDay(lastEnrollment.end_date),
+    const existsEnrollment = await Enrollment.count({
+      where: {
+        canceled_at: null,
+        [Op.and]: {
+          start_date: {
+            [Op.lte]: end_date,
+          },
+          end_date: {
+            [Op.gte]: startDay,
+          },
         },
-        { start: startDay, end: end_date }
-      )
-    ) {
+      },
+    });
+
+    if (existsEnrollment > 0) {
       return res
         .status(409)
-        .json({ error: `${i18n.__('enrollment.enrollment.overlapping')}` });
+        .json({ error: `${i18n.__('enrollment.overlapping')}` });
     }
 
     enrollment.canceled_at = new Date();
