@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import sq from 'sequelize';
 
+import Bluebird from 'bluebird';
 import { BaseModel } from './BaseModel';
 
 class Plan extends BaseModel {
@@ -27,6 +29,25 @@ class Plan extends BaseModel {
       { sequelize }
     );
     return Plan;
+  }
+
+  public static findAllNotExcluded(): Bluebird<Plan[]> {
+    return Plan.findAll({
+      where: { excluded: false },
+      attributes: ['id', 'title', 'duration', 'price'],
+    });
+  }
+
+  public static findOneByIdAndNotCanceled(id: string): Bluebird<Plan> {
+    return Plan.findOne({
+      where: { id, excluded: false },
+    });
+  }
+
+  public static findOneByTitleAndNotCanceled(title: string): Bluebird<Plan> {
+    return Plan.findOne({
+      where: { title, excluded: false },
+    });
   }
 }
 
