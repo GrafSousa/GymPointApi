@@ -3,20 +3,20 @@ import * as Yup from 'yup';
 
 import { Plan } from '../models/Plan';
 import { i18n } from '../../i18n';
-import PlanServiceImpl from '../services/PlanServiceImpl';
 
 import { BadRequestApiException } from '../errors/index';
+import { getPlanService } from './EnrollmentController';
 
 class PlanController {
   public async index(req: Request, res: Response): Promise<Response> {
-    const plans = await PlanServiceImpl.findPlans();
+    const plans = await getPlanService().findPlans();
     return res.json(plans);
   }
 
   public async store(req: Request, res: Response): Promise<Response> {
     this.validateRequest(req);
 
-    await PlanServiceImpl.existsPlanByTitle(req.body.title);
+    await getPlanService().existsPlanByTitle(req.body.title);
 
     const { title, duration, price } = await Plan.create(req.body);
 
@@ -30,8 +30,8 @@ class PlanController {
   public async update(req: Request, res: Response): Promise<Response> {
     this.validateRequest(req);
 
-    const plan = await PlanServiceImpl.findPlanOrThrow(req.params.id);
-    await PlanServiceImpl.existsPlanByTitle(req.body.title);
+    const plan = await getPlanService().findPlanOrThrow(req.params.id);
+    await getPlanService().existsPlanByTitle(req.body.title);
 
     const { id, title, duration, price } = await plan.update(req.body);
 
@@ -44,7 +44,7 @@ class PlanController {
   }
 
   public async delete(req: Request, res: Response): Promise<Response> {
-    const plan = await PlanServiceImpl.findPlanOrThrow(req.params.id);
+    const plan = await getPlanService().findPlanOrThrow(req.params.id);
 
     plan.excluded = true;
 

@@ -4,13 +4,14 @@ import * as Yup from 'yup';
 import { i18n } from '../../i18n';
 import { Student } from '../models/Student';
 import { BadRequestApiException } from '../errors/index';
-import StudentServiceImpl from '../services/StudentServiceImpl';
+
+import { getStudentService } from './EnrollmentController';
 
 class StudentController {
   public async store(req: Request, res: Response): Promise<Response> {
     this.validateRequest(req);
 
-    await StudentServiceImpl.existsStudentByEmail(req.body.email);
+    await getStudentService().existsStudentByEmail(req.body.email);
 
     const { id, name, email, age, weight, height } = await Student.create(
       req.body
@@ -31,9 +32,9 @@ class StudentController {
 
     const { id } = req.params;
 
-    const student = await StudentServiceImpl.findStudentOrThrow(id);
+    const student = await getStudentService().findStudentOrThrow(id);
 
-    await StudentServiceImpl.isTheSameEmail(req.body.email, student.email);
+    await getStudentService().isTheSameEmail(req.body.email, student.email);
 
     await student.update(req.body);
 

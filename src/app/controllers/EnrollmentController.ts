@@ -14,6 +14,22 @@ import PlanServiceImpl from '../services/PlanServiceImpl';
 import StudentServiceImpl from '../services/StudentServiceImpl';
 import EnrollmentServiceImpl from '../services/EnrollmentServiceImpl';
 
+function getPlanService() {
+  return PlanServiceImpl;
+}
+
+function getStudentService() {
+  return StudentServiceImpl;
+}
+
+function getEnrollmentService() {
+  return EnrollmentServiceImpl;
+}
+
+export {
+  getPlanService, getStudentService, getEnrollmentService
+}
+
 class EnrollmentController {
   async index(req: Request, res: Response): Promise<Response> {
     const { page = 1 } = req.query;
@@ -34,12 +50,12 @@ class EnrollmentController {
           .json({ error: `${i18n.__('enrollment.pastDates')}` });
       }
 
-      const plan = await PlanServiceImpl.findPlanOrThrow(plan_id);
-      const student = await StudentServiceImpl.findStudentOrThrow(student_id);
+      const plan = await getPlanService().findPlanOrThrow(plan_id);
+      const student = await getStudentService().findStudentOrThrow(student_id);
 
       const end_date = this.calculateEndDate(start_date, plan.duration);
 
-      await EnrollmentServiceImpl.isEnrollmentOverlapping(startDay, end_date);
+      await getEnrollmentService().isEnrollmentOverlapping(startDay, end_date);
 
       const price = this.calculatePrice(plan.duration, plan.price);
       const enrollment = await Enrollment.create({
@@ -69,9 +85,9 @@ class EnrollmentController {
 
     const { plan_id, student_id, start_date } = req.body;
     try {
-      await StudentServiceImpl.existsStudent(student_id);
+      await getStudentService().existsStudent(student_id);
 
-      const enrollment = await EnrollmentServiceImpl.findEnrollmentOrThrow(
+      const enrollment = await getEnrollmentService().findEnrollmentOrThrow(
         req.body.id
       );
 
@@ -80,11 +96,11 @@ class EnrollmentController {
         req.body.student_id
       );
 
-      const plan = await PlanServiceImpl.findPlanOrThrow(plan_id);
+      const plan = await getPlanService().findPlanOrThrow(plan_id);
       const startDay = this.calculateStardDay(start_date);
       const end_date = this.calculateEndDate(start_date, plan.duration);
 
-      await EnrollmentServiceImpl.isEnrollmentOverlapping(startDay, end_date);
+      await getEnrollmentService().isEnrollmentOverlapping(startDay, end_date);
       await Enrollment.deleteEnrollment(enrollment);
 
       const price = this.calculatePrice(plan.duration, plan.price);
