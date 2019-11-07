@@ -1,34 +1,16 @@
 import { Request, Response } from 'express';
 import * as Yup from 'yup';
 
-import { Student } from '../models/Student';
 import { i18n } from '../../i18n';
+import { Student } from '../models/Student';
+import { BadRequestApiException } from '../errors/index';
+import StudentServiceImpl from '../services/StudentServiceImpl';
 
 class StudentController {
   public async store(req: Request, res: Response): Promise<Response> {
-    const schema = Yup.object().shape({
-      name: Yup.string().required(),
-      email: Yup.string()
-        .email()
-        .required(),
-      age: Yup.number().required(),
-      weight: Yup.number().required(),
-      height: Yup.number().required(),
-    });
+    this.validateRequest(req);
 
-    if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: `${i18n.__('validation.fail')}` });
-    }
-
-    const studentExists = await Student.findOne({
-      where: { email: req.body.email },
-    });
-
-    if (studentExists) {
-      return res
-        .status(409)
-        .json({ error: `${i18n.__('student.already.exists')}` });
-    }
+    await StudentServiceImpl.existsStudentByEmail(req.body.email);
 
     const { id, name, email, age, weight, height } = await Student.create(
       req.body
@@ -45,36 +27,37 @@ class StudentController {
   }
 
   public async update(req: Request, res: Response): Promise<Response> {
-    const schema = Yup.object().shape({
-      name: Yup.string(),
-      email: Yup.string().email(),
-      age: Yup.number(),
-      weight: Yup.number(),
-      height: Yup.number(),
-    });
-
-    if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: `${i18n.__('validation.fail')}` });
-    }
+    this.validateRequest(req);
 
     const { id } = req.params;
-    const { email } = req.body;
 
-    const student = await Student.findByPk(id);
+    const student = await StudentServiceImpl.findStudentOrThrow(id);
 
-    if (email !== student.email) {
-      const studentExists = await Student.findOne({ where: { email } });
-
-      if (studentExists) {
-        return res
-          .status(409)
-          .json({ error: `${i18n.__('student.already.exists')}` });
-      }
-    }
+    await StudentServiceImpl.isTheSameEmail(req.body.email, student.email);
 
     await student.update(req.body);
 
     return res.json(student);
+  }
+
+  async validateRequest(req: Request): Promise<void> {
+    const schema = this.createSchema();
+
+    if (!(await schema.isValid(req.body))) {
+      throw new BadRequestApiException(`${i18n.__('validation.fail')}`);
+    }
+  }
+
+  createSchema() {
+    return Yup.object().shape({
+      name: Yup.string().required(),
+      email: Yup.string()
+        .email()
+        .required(),
+      age: Yup.number().required(),
+      weight: Yup.number().required(),
+      height: Yup.number().required(),
+    });
   }
 }
 
