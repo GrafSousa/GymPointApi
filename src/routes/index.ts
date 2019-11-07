@@ -14,7 +14,7 @@ import { helpOrderRoutes } from './helporders/index';
 const routes = Router();
 const url = '/api';
 
-routes.post('/sessions', SessionController.store);
+routes.post(`${url}/sessions`, SessionController.store);
 routes.use(`${url}/students`, checkinRoutes);
 routes.use(`${url}/students`, studentHelpOrderRoutes);
 
