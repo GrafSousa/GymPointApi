@@ -1,6 +1,4 @@
 import sq from 'sequelize';
-
-import Bluebird from 'bluebird';
 import { BaseModel } from './BaseModel';
 
 class Student extends BaseModel {
@@ -32,7 +30,7 @@ class Student extends BaseModel {
     return Student;
   }
 
-  public static findStudentByEmail(email: string): Bluebird<Student> {
+  public static findStudentByEmail(email: string): Promise<Student> {
     return Student.findOne({
       where: { email },
     });

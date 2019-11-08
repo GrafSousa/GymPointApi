@@ -19,7 +19,7 @@ class StudentServiceImpl implements StudentService {
   async existsStudentByEmail(email: string): Promise<void> {
     const existsStudent = await Student.findStudentByEmail(email);
 
-    if (!existsStudent) {
+    if (existsStudent) {
       throw new ConflictApiException(`${i18n.__('student.already.exists')}`);
     }
   }
@@ -27,8 +27,16 @@ class StudentServiceImpl implements StudentService {
   async existsStudent(student_id: string): Promise<void> {
     const existsStudent = await Student.findByPk(student_id);
 
-    if (!existsStudent) {
+    if (existsStudent) {
       throw new ConflictApiException(`${i18n.__('student.already.exists')}`);
+    }
+  }
+
+  async notExistsStudent(student_id: string): Promise<void> {
+    const existsStudent = await Student.findByPk(student_id);
+
+    if (!existsStudent) {
+      throw new ConflictApiException(`${i18n.__('student.notFound')}`);
     }
   }
 

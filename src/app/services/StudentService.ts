@@ -5,6 +5,7 @@ interface StudentService {
   findStudentOrThrow(student_id: string): Promise<Student>;
   existsStudentByEmail(email: string): Promise<void>;
   existsStudent(student_id: string): Promise<void>;
+  notExistsStudent(student_id: string): Promise<void>;
   isTheSameEmail(reqEmail: string, studentEmail: string): Promise<void>;
 }
 

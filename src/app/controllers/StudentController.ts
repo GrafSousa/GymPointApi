@@ -3,45 +3,56 @@ import * as Yup from 'yup';
 
 import { i18n } from '../../i18n';
 import { Student } from '../models/Student';
-import { BadRequestApiException } from '../errors/index';
-
+import { BadRequestApiException, HttpApiException } from '../errors/index';
 import { getStudentService } from './EnrollmentController';
 
 class StudentController {
   public async store(req: Request, res: Response): Promise<Response> {
-    this.validateRequest(req);
+    try {
+      await this.validateRequest(req);
+      await getStudentService().existsStudentByEmail(req.body.email);
 
-    await getStudentService().existsStudentByEmail(req.body.email);
+      const { id, name, email, age, weight, height } = await Student.create(
+        req.body
+      );
 
-    const { id, name, email, age, weight, height } = await Student.create(
-      req.body
-    );
-
-    return res.json({
-      id,
-      name,
-      email,
-      age,
-      weight,
-      height,
-    });
+      return res.json({
+        id,
+        name,
+        email,
+        age,
+        weight,
+        height,
+      });
+    } catch (e) {
+      if (e instanceof HttpApiException) {
+        return res.status(e.code).json(e.message);
+      }
+      return res.json(e.message);
+    }
   }
 
   public async update(req: Request, res: Response): Promise<Response> {
-    this.validateRequest(req);
+    try {
+      await this.validateRequest(req);
+      const { id } = req.params;
 
-    const { id } = req.params;
+      const student = await getStudentService().findStudentOrThrow(id);
 
-    const student = await getStudentService().findStudentOrThrow(id);
+      await getStudentService().isTheSameEmail(req.body.email, student.email);
 
-    await getStudentService().isTheSameEmail(req.body.email, student.email);
+      await student.update(req.body);
 
-    await student.update(req.body);
-
-    return res.json(student);
+      return res.json(student);
+    } catch (e) {
+      if (e instanceof HttpApiException) {
+        return res.status(e.code).json(e.message);
+      }
+      return res.json(e.message);
+    }
   }
 
-  async validateRequest(req: Request): Promise<void> {
+  private async validateRequest(req: Request): Promise<void> {
     const schema = this.createSchema();
 
     if (!(await schema.isValid(req.body))) {
