@@ -1,4 +1,3 @@
-import Bluebird from 'bluebird';
 import sq, { ModelCtor, Model } from 'sequelize';
 import { BaseModel } from './BaseModel';
 import { Student } from './Student';
@@ -37,7 +36,7 @@ class Enrollment extends BaseModel {
     this.belongsTo(models.Plan, { foreignKey: 'plan_id', as: 'plan' });
   }
 
-  public static findAllNotCanceled(page: number): Bluebird<Enrollment[]> {
+  public static findAllNotCanceled(page: number): Promise<Enrollment[]> {
     return Enrollment.findAll({
       where: {
         canceled_at: null,
@@ -60,7 +59,7 @@ class Enrollment extends BaseModel {
     });
   }
 
-  public static findOneNotCanceled(id: string): Bluebird<Enrollment> {
+  public static findOneNotCanceled(id: string): Promise<Enrollment> {
     return Enrollment.findOne({
       where: {
         id,
@@ -69,7 +68,7 @@ class Enrollment extends BaseModel {
     });
   }
 
-  public static deleteEnrollment(enrollment: Enrollment): Bluebird<Enrollment> {
+  public static deleteEnrollment(enrollment: Enrollment): Promise<Enrollment> {
     enrollment.canceled_at = new Date();
 
     return enrollment.save();

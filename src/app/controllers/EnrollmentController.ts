@@ -13,22 +13,23 @@ import { HttpApiException, BadRequestApiException } from '../errors/index';
 import PlanServiceImpl from '../services/PlanServiceImpl';
 import StudentServiceImpl from '../services/StudentServiceImpl';
 import EnrollmentServiceImpl from '../services/EnrollmentServiceImpl';
+import { PlanService } from '../services/PlanService';
+import { StudentService } from '../services/StudentService';
+import { EnrollmentService } from '../services/EnrollmentService';
 
-function getPlanService() {
+function getPlanService(): PlanService {
   return PlanServiceImpl;
 }
 
-function getStudentService() {
+function getStudentService(): StudentService {
   return StudentServiceImpl;
 }
 
-function getEnrollmentService() {
+function getEnrollmentService(): EnrollmentService {
   return EnrollmentServiceImpl;
 }
 
-export {
-  getPlanService, getStudentService, getEnrollmentService
-}
+export { getPlanService, getStudentService, getEnrollmentService };
 
 class EnrollmentController {
   async index(req: Request, res: Response): Promise<Response> {
@@ -38,10 +39,9 @@ class EnrollmentController {
   }
 
   async store(req: Request, res: Response): Promise<Response> {
-    this.verifyRequest(req);
-
     const { plan_id, student_id, start_date } = req.body;
     try {
+      await this.verifyRequest(req);
       const startDay = this.calculateStardDay(start_date);
 
       if (isBefore(startDay, startOfDay(new Date()))) {
@@ -81,15 +81,15 @@ class EnrollmentController {
   }
 
   async update(req: Request, res: Response): Promise<Response> {
-    this.verifyRequest(req);
-
     const { plan_id, student_id, start_date } = req.body;
     try {
-      await getStudentService().existsStudent(student_id);
+      await this.verifyRequest(req);
 
       const enrollment = await getEnrollmentService().findEnrollmentOrThrow(
-        req.body.id
+        req.params.id
       );
+
+      await getStudentService().notExistsStudent(student_id);
 
       this.isStudentOfThisEnrollment(
         enrollment.student_id,
@@ -122,13 +122,25 @@ class EnrollmentController {
   }
 
   async delete(req: Request, res: Response): Promise<Response> {
-    const enrollment = await Enrollment.findOneNotCanceled(req.params.id);
+    try {
+      const enrollment = await Enrollment.findOneNotCanceled(req.params.id);
 
-    this.isStudentOfThisEnrollment(enrollment.student_id, req.body.student_id);
+      this.isStudentOfThisEnrollment(
+        enrollment.student_id,
+        req.body.student_id
+      );
 
-    await Enrollment.deleteEnrollment(enrollment);
+      this.isPlanOfThisEnrollment(enrollment.plan_id, req.body.plan_id);
 
-    return res.json(enrollment);
+      await Enrollment.deleteEnrollment(enrollment);
+
+      return res.json(enrollment);
+    } catch (e) {
+      if (e instanceof HttpApiException) {
+        return res.status(e.code).json(e.message);
+      }
+      return res.json(e.message);
+    }
   }
 
   async verifyRequest(req: Request): Promise<void> {

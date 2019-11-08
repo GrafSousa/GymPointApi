@@ -6,12 +6,12 @@ const enrollmentRoutes = Router();
 
 enrollmentRoutes
   .route('')
-  .get(EnrollmentController.index)
-  .post(EnrollmentController.store);
+  .get(EnrollmentController.index.bind(EnrollmentController))
+  .post(EnrollmentController.store.bind(EnrollmentController));
 
 enrollmentRoutes
   .route('/:id')
-  .delete(EnrollmentController.delete)
-  .put(EnrollmentController.update);
+  .delete(EnrollmentController.delete.bind(EnrollmentController))
+  .put(EnrollmentController.update.bind(EnrollmentController));
 
 export { enrollmentRoutes };
