@@ -6,12 +6,12 @@ const planRoutes = Router();
 
 planRoutes
   .route('')
-  .get(PlanController.index)
-  .post(PlanController.store);
+  .get(PlanController.index.bind(PlanController))
+  .post(PlanController.store.bind(PlanController));
 
 planRoutes
   .route('/:id')
-  .delete(PlanController.delete)
-  .put(PlanController.update);
+  .delete(PlanController.delete.bind(PlanController))
+  .put(PlanController.update.bind(PlanController));
 
 export { planRoutes };

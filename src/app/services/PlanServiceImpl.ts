@@ -22,7 +22,7 @@ class PlanServiceImpl implements PlanService {
     const planExists = await Plan.findOneByTitleAndNotCanceled(title);
 
     if (planExists) {
-      throw new ConflictApiException(`${i18n.__('plan.already.exists')}`);      
+      throw new ConflictApiException(`${i18n.__('plan.already.exists')}`);
     }
   }
 }
