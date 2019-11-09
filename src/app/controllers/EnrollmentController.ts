@@ -5,6 +5,7 @@ import { parseISO, isBefore, addMonths, startOfDay } from 'date-fns';
 
 import Queue from '../../lib/Queue';
 import EnrollMail from '../jobs/EnrollMail';
+import { BaseController } from './BaseController';
 import { Enrollment } from '../models/Enrollment';
 
 import { i18n } from '../../i18n';
@@ -17,21 +18,19 @@ import { PlanService } from '../services/PlanService';
 import { StudentService } from '../services/StudentService';
 import { EnrollmentService } from '../services/EnrollmentService';
 
-function getPlanService(): PlanService {
-  return PlanServiceImpl;
-}
+class EnrollmentController implements BaseController {
+  private planService: PlanService;
 
-function getStudentService(): StudentService {
-  return StudentServiceImpl;
-}
+  private studentService: StudentService;
 
-function getEnrollmentService(): EnrollmentService {
-  return EnrollmentServiceImpl;
-}
+  private enrollmentService: EnrollmentService;
 
-export { getPlanService, getStudentService, getEnrollmentService };
+  constructor() {
+    this.planService = PlanServiceImpl;
+    this.studentService = StudentServiceImpl;
+    this.enrollmentService = EnrollmentServiceImpl;
+  }
 
-class EnrollmentController {
   async index(req: Request, res: Response): Promise<Response> {
     const { page = 1 } = req.query;
     const enrollments = await Enrollment.findAllNotCanceled(page);
@@ -50,12 +49,12 @@ class EnrollmentController {
           .json({ error: `${i18n.__('enrollment.pastDates')}` });
       }
 
-      const plan = await getPlanService().findPlanOrThrow(plan_id);
-      const student = await getStudentService().findStudentOrThrow(student_id);
+      const plan = await this.planService.findPlanOrThrow(plan_id);
+      const student = await this.studentService.findStudentOrThrow(student_id);
 
       const end_date = this.calculateEndDate(start_date, plan.duration);
 
-      await getEnrollmentService().isEnrollmentOverlapping(startDay, end_date);
+      await this.enrollmentService.isEnrollmentOverlapping(startDay, end_date);
 
       const price = this.calculatePrice(plan.duration, plan.price);
       const enrollment = await Enrollment.create({
@@ -85,22 +84,22 @@ class EnrollmentController {
     try {
       await this.verifyRequest(req);
 
-      const enrollment = await getEnrollmentService().findEnrollmentOrThrow(
+      const enrollment = await this.enrollmentService.findEnrollmentOrThrow(
         req.params.id
       );
 
-      await getStudentService().notExistsStudent(student_id);
+      await this.studentService.notExistsStudent(student_id);
 
       this.isStudentOfThisEnrollment(
         enrollment.student_id,
         req.body.student_id
       );
 
-      const plan = await getPlanService().findPlanOrThrow(plan_id);
+      const plan = await this.planService.findPlanOrThrow(plan_id);
       const startDay = this.calculateStardDay(start_date);
       const end_date = this.calculateEndDate(start_date, plan.duration);
 
-      await getEnrollmentService().isEnrollmentOverlapping(startDay, end_date);
+      await this.enrollmentService.isEnrollmentOverlapping(startDay, end_date);
       await Enrollment.deleteEnrollment(enrollment);
 
       const price = this.calculatePrice(plan.duration, plan.price);
@@ -189,4 +188,11 @@ class EnrollmentController {
   }
 }
 
-export default new EnrollmentController();
+const instance = new EnrollmentController();
+['index', 'store', 'delete', 'update'].forEach(method => {
+  if (instance[method]) {
+    instance[method] = instance[method].bind(instance);
+  }
+});
+
+export { instance as enrollmentController };

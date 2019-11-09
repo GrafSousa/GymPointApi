@@ -1,17 +1,17 @@
 import { Router } from 'express';
 
-import PlanController from '../../app/controllers/PlanController';
+import { planController } from '../../app/controllers/PlanController';
 
 const planRoutes = Router();
 
 planRoutes
   .route('')
-  .get(PlanController.index.bind(PlanController))
-  .post(PlanController.store.bind(PlanController));
+  .get(planController.index)
+  .post(planController.store);
 
 planRoutes
   .route('/:id')
-  .delete(PlanController.delete.bind(PlanController))
-  .put(PlanController.update.bind(PlanController));
+  .delete(planController.delete)
+  .put(planController.update);
 
 export { planRoutes };

@@ -4,13 +4,20 @@ import * as Yup from 'yup';
 import { i18n } from '../../i18n';
 import { Student } from '../models/Student';
 import { BadRequestApiException, HttpApiException } from '../errors/index';
-import { getStudentService } from './EnrollmentController';
+import { StudentService } from '../services/StudentService';
+import StudentServiceImpl from '../services/StudentServiceImpl';
 
 class StudentController {
+  private studentService: StudentService;
+
+  constructor() {
+    this.studentService = StudentServiceImpl;
+  }
+
   public async store(req: Request, res: Response): Promise<Response> {
     try {
       await this.validateRequest(req);
-      await getStudentService().existsStudentByEmail(req.body.email);
+      await this.studentService.existsStudentByEmail(req.body.email);
 
       const { id, name, email, age, weight, height } = await Student.create(
         req.body
@@ -37,9 +44,9 @@ class StudentController {
       await this.validateRequest(req);
       const { id } = req.params;
 
-      const student = await getStudentService().findStudentOrThrow(id);
+      const student = await this.studentService.findStudentOrThrow(id);
 
-      await getStudentService().isTheSameEmail(req.body.email, student.email);
+      await this.studentService.isTheSameEmail(req.body.email, student.email);
 
       await student.update(req.body);
 
@@ -73,4 +80,11 @@ class StudentController {
   }
 }
 
-export default new StudentController();
+const instance = new StudentController();
+['store', 'update'].forEach(method => {
+  if (instance[method]) {
+    instance[method] = instance[method].bind(instance);
+  }
+});
+
+export { instance as studentController };

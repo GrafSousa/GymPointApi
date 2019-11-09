@@ -4,12 +4,20 @@ import * as Yup from 'yup';
 import { Plan } from '../models/Plan';
 import { i18n } from '../../i18n';
 
+import { BaseController } from './BaseController';
 import { BadRequestApiException, HttpApiException } from '../errors/index';
-import { getPlanService } from './EnrollmentController';
+import { PlanService } from '../services/PlanService';
+import PlanServiceImpl from '../services/PlanServiceImpl';
 
-class PlanController {
+class PlanController implements BaseController {
+  private planService: PlanService;
+
+  constructor() {
+    this.planService = PlanServiceImpl;
+  }
+
   public async index(req: Request, res: Response): Promise<Response> {
-    const plans = await getPlanService().findPlans();
+    const plans = await this.planService.findPlans();
     return res.json(plans);
   }
 
@@ -17,7 +25,7 @@ class PlanController {
     try {
       await this.validateRequest(req);
 
-      await getPlanService().existsPlanByTitle(req.body.title);
+      await this.planService.existsPlanByTitle(req.body.title);
 
       const { title, duration, price } = await Plan.create(req.body);
 
@@ -38,8 +46,8 @@ class PlanController {
     try {
       await this.validateRequest(req);
 
-      const plan = await getPlanService().findPlanOrThrow(req.params.id);
-      await getPlanService().existsPlanByTitle(req.body.title);
+      const plan = await this.planService.findPlanOrThrow(req.params.id);
+      await this.planService.existsPlanByTitle(req.body.title);
 
       const { id, title, duration, price } = await plan.update(req.body);
 
@@ -59,7 +67,7 @@ class PlanController {
 
   public async delete(req: Request, res: Response): Promise<Response> {
     try {
-      const plan = await getPlanService().findPlanOrThrow(req.params.id);
+      const plan = await this.planService.findPlanOrThrow(req.params.id);
 
       plan.excluded = true;
 
@@ -94,4 +102,11 @@ class PlanController {
   }
 }
 
-export default new PlanController();
+const instance = new PlanController();
+['index', 'store', 'delete', 'update'].forEach(method => {
+  if (instance[method]) {
+    instance[method] = instance[method].bind(instance);
+  }
+});
+
+export { instance as planController };

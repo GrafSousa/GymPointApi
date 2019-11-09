@@ -1,12 +1,10 @@
 import { Router } from 'express';
 
-import StudentController from '../../app/controllers/StudentController';
+import { studentController } from '../../app/controllers/StudentController';
 
 const studentRoutes = Router();
 
-studentRoutes.route('').post(StudentController.store.bind(StudentController));
-studentRoutes
-  .route('/:id')
-  .put(StudentController.update.bind(StudentController));
+studentRoutes.route('').post(studentController.store);
+studentRoutes.route('/:id').put(studentController.update);
 
 export { studentRoutes };
