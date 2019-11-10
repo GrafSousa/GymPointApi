@@ -16,4 +16,5 @@ const CheckinSchema = new mongoose.Schema(
   }
 );
 
+export { CheckinInterface };
 export default mongoose.model<CheckinInterface>('Checkin', CheckinSchema);

@@ -1,9 +1,12 @@
 import { Router } from 'express';
 
-import CheckinController from '../../app/controllers/CheckinController';
+import { checkinController } from '../../app/controllers/CheckinController';
 
 const checkinRoutes = Router();
 
-checkinRoutes.route('/:id/checkins').get(CheckinController.index);
+checkinRoutes
+  .route('/:id/checkins')
+  .get(checkinController.index)
+  .post(checkinController.store);
 
 export { checkinRoutes };

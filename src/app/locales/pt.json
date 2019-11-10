@@ -13,5 +13,7 @@
   "enrollment.invalidStudent": "Estudante inválido",
   "enrollment.invalidPlan": "Plano inválido",
   "enrollment.overlapping": "Aluno já possui matrícula nesta data",
-  "enrollment.pastDates": "Datas passadas não são permitidas"
+  "enrollment.pastDates": "Datas passadas não são permitidas",
+  "checkin.conflict": "Estudante já realizou checkin hoje",
+  "checkin.limit.reached": "Estudante atingiu limite máximo de checkins na semana"
 }
