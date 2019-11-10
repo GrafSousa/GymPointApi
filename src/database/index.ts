@@ -25,8 +25,8 @@ class Database {
       .map(model => model.associate && model.associate(this.connection.models));
   }
 
-  mongo() {
-    this.connection = mongoose.connect(process.env.MONGO_URL, {
+  mongo(): void {
+    mongoose.connect(process.env.MONGO_URL, {
       useNewUrlParser: true,
       useFindAndModify: true,
     });

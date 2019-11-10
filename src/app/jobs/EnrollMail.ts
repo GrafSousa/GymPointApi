@@ -1,14 +1,15 @@
+import { SentMessageInfo } from 'nodemailer';
 import { format, parseISO } from 'date-fns';
 import pt from 'date-fns/locale/pt';
 
 import Mail from '../../lib/Mail';
 
 class EnrollMail {
-  get key() {
+  get key(): string {
     return 'EnrollMail';
   }
 
-  async handle({ data }) {
+  async handle({ data }): Promise<SentMessageInfo> {
     const {
       student,
       enrollment: { start_date, end_date, price },

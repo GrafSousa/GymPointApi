@@ -12,7 +12,7 @@ class Queue {
     this.init();
   }
 
-  init() {
+  init(): void {
     jobs.forEach(({ key, handle }) => {
       this.queues[key] = {
         bee: new Bee(key, {
@@ -23,11 +23,11 @@ class Queue {
     });
   }
 
-  add(queue, job) {
+  add<T>(queue, job: T) {
     return this.queues[queue].bee.createJob(job).save();
   }
 
-  processQueue() {
+  processQueue(): void {
     jobs.forEach(job => {
       const { bee, handle } = this.queues[job.key];
 
@@ -35,7 +35,7 @@ class Queue {
     });
   }
 
-  handleFailure(job, err) {
+  handleFailure(job, err): void {
     console.log(`Queue ${job.queue.name}: FAILED`, err);
   }
 }

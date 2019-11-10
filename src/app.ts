@@ -1,11 +1,6 @@
 import 'dotenv/config';
 
-import express, {
-  Request,
-  Response,
-  ErrorRequestHandler,
-  NextFunction,
-} from 'express';
+import express, { Request, Response, ErrorRequestHandler } from 'express';
 import Youch from 'youch';
 import * as Sentry from '@sentry/node';
 
@@ -46,12 +41,7 @@ class App {
 
   private exceptionHandler(): void {
     this.server.use(
-      async (
-        err: ErrorRequestHandler,
-        req: Request,
-        res: Response,
-        next: NextFunction
-      ) => {
+      async (err: ErrorRequestHandler, req: Request, res: Response) => {
         if (process.env.NODE_ENV === 'development') {
           const errors = await new Youch(err, req).toJSON();
 
